@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML2</title>
+
+    <script>
+        let shuffle = function (arr) {
+            var i, j, temp;
+            arr = arr.slice();
+            i = arr.length;
+            if (i === 0) {
+                return arr;
+            }
+            while (--i) {
+                j = Math.floor(Math.random() * (i + 1));
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        };
+    </script>
+
+    <script>
+        const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+    </script>
+
+    <script>
+        let questions = shuffle(
+            [
+                // { question: 問題文, first: 一つ目の選択肢, second: 二つ目の選択肢, ans: 正解の選択肢の番号 /*, picture: picturesディレクトリ内の背景の映像のファイル名 */}
+                { "question": "城北は男子校？共学？", "first": "共学", "second": "男子校", "ans": "2" /*, picture: "pictures/IMG_0542.MOV" */ },
+                { "question": "1->3->6->11->18->29->42->59->?", "first": "78", "second": "80", "ans": "1" /*, picture: "pictures/IMG_0543.MOV" */ },
+                { "question": "sodium 意味は？", "first": "硫黄", "second": "ナトリウム", "ans": "2" /*, picture: "pictures/IMG_0544.MOV" */ },
+                { "question": "面積が大きいのは東京都？沖縄県？", "first": "東京都", "second": "沖縄県", "ans": "2" },
+                { "question": "サイゼリア？サイゼリヤ？", "first": "サイゼリア", "second": "サイゼリヤ", "ans": "2" },
+                { "question": "ここ H1H 教室は高校棟何階？", "first": "2", "second": "3", "ans": "2" },
+            ]
+        )
+
+        // 問題数
+        let numOfQuestions = 5;
+
+        let ans = "1"
+
+        let cnt = 0
+
+        let next = async function (answer) {
+            if (cnt !== 0) {
+                document.getElementById("question").setAttribute("hidden", "")
+                document.getElementById("choice1").setAttribute("hidden", "")
+                document.getElementById("choice2").setAttribute("hidden", "")
+                if (answer === "1") {
+                    document.getElementById("background-video").setAttribute("src", "pictures/Left.mov")
+                } else {
+                    document.getElementById("background-video").setAttribute("src", "pictures/Right.mov")
+                }
+                await sleep(3800)
+
+                document.getElementById("question").removeAttribute("hidden")
+            }
+
+            let question, choice1, choice2, background;
+            if (cnt >= numOfQuestions && answer === ans) {
+                question = "クリアー!!!!!"
+                next = function (_) { }
+            } else if (answer === ans) {
+                if (cnt !== 0) {
+                    document.getElementById("background-video").setAttribute("src", "")
+                    document.getElementById("question").textContent = "正解！"
+                    await sleep(2000)
+                    document.getElementById("question").textContent = "真ん中に戻って下さい"
+                    await sleep(10000)
+                }
+
+                let q = questions[cnt]
+
+                background = "pictures/Background.mov" // q.picture
+
+                question = q.question
+                choice1 = q.first
+                choice2 = q.second
+
+                ans = q.ans
+
+                cnt++
+            } else {
+                question = "不正解"
+
+                next = function (_) { }
+
+                document.getElementById("failed-audio").play()
+            }
+
+            document.getElementById("background-video").setAttribute("src", background ?? "")
+            document.getElementById("question").textContent = question
+            document.getElementById("choice1").textContent = choice1 ?? ""
+            document.getElementById("choice2").textContent = choice2 ?? ""
+
+            document.getElementById("choice1").removeAttribute("hidden")
+            document.getElementById("choice2").removeAttribute("hidden")
+        }
+    </script>
+
+    <style>
+        body {
+            background: #000;
+        }
+
+        .video-wrap {
+            position: relative;
+        }
+
+        video {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        p {
+            font-family: serif;
+            color: #fff;
+            background-color: #000;
+            font-size: 400%;
+            position: absolute;
+            left: 50%;
+            top: 100px;
+            z-index: 1;
+            transform: translateX(-50%);
+        }
+
+        button {
+            z-index: 1;
+            position: absolute;
+            font-family: serif;
+            font-size: 200%;
+            top: 400px;
+            background-image: url(pictures/button.png);
+            background-size: 100%;
+            height: 300px;
+            width: 384px;
+        }
+
+        #choice1 {
+            left: 25%;
+            transform: translateX(-50%);
+        }
+
+        #choice2 {
+            left: 75%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="video-wrap">
+        <p id="question"></p>
+        <button id="choice1" onclick='next("1")'>start</button>
+        <button id="choice2" onclick='next("2")'></button>
+        <video id="background-video" autoplay loop muted></video>
+    </div>
+
+    <audio id="failed-audio" src="pictures/audio1.mp3"></audio>
+</body>
+
+</html>
