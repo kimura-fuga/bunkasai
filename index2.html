@@ -1143,12 +1143,6 @@
                     document.getElementById("background-video").setAttribute("hidden", "")
                     document.getElementById("background-video").setAttribute("muted", "")
                     document.getElementById("background-video").setAttribute("loop", "")
-
-                    document.getElementById("announce").textContent = "真ん中に戻って下さい"
-
-                    await sleep(10000)
-
-                    document.getElementById("announce").textContent = ""
                 }
 
                 if (cnt >= numOfQuestions) {
@@ -1180,6 +1174,14 @@
 
                     next = function (_) { }
                 } else {
+                    if (cnt !== 0) {
+                        document.getElementById("announce").textContent = "真ん中に戻って下さい"
+
+                        await sleep(10000)
+
+                        document.getElementById("announce").textContent = ""
+                    }
+
                     let q = questions[cnt]
 
                     background = "pictures/Background.mov" // q.picture
