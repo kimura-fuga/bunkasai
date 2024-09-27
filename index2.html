@@ -1114,21 +1114,20 @@
                     document.getElementById("background-video").setAttribute("src", "pictures/Right.mov")
                 }
                 await sleep(3800)
-
-                document.getElementById("question").removeAttribute("hidden")
             }
 
-            let question, choice1, choice2, background;
+            let question, announce, choice1, choice2, background;
             if (cnt >= numOfQuestions && answer === ans) {
-                question = "クリアー!!!!!"
+                announce = "クリアー!!!!!"
                 next = function (_) { }
             } else if (answer === ans) {
                 if (cnt !== 0) {
                     document.getElementById("background-video").setAttribute("src", "")
-                    document.getElementById("question").textContent = "正解！"
+                    document.getElementById("announce").textContent = "正解！"
                     await sleep(2000)
-                    document.getElementById("question").textContent = "真ん中に戻って下さい"
+                    document.getElementById("announce").textContent = "真ん中に戻って下さい"
                     await sleep(10000)
+                    document.getElementById("announce").textContent = ""
                 }
 
                 let q = questions[cnt]
@@ -1142,8 +1141,12 @@
                 ans = q.ans
 
                 cnt++
+
+                document.getElementById("choice1").removeAttribute("hidden")
+                document.getElementById("choice2").removeAttribute("hidden")
+                document.getElementById("question").removeAttribute("hidden")
             } else {
-                question = "不正解"
+                announce = "不正解"
 
                 next = function (_) { }
 
@@ -1154,9 +1157,7 @@
             document.getElementById("question").textContent = question
             document.getElementById("choice1").textContent = choice1 ?? ""
             document.getElementById("choice2").textContent = choice2 ?? ""
-
-            document.getElementById("choice1").removeAttribute("hidden")
-            document.getElementById("choice2").removeAttribute("hidden")
+            document.getElementById("announce").textContent = announce ?? ""
         }
     </script>
 
@@ -1182,8 +1183,17 @@
             font-size: 400%;
             position: absolute;
             left: 50%;
-            top: 60px;
             z-index: 1;
+            margin: 0 0 0;
+        }
+
+        #question {
+            top: 230px;
+            transform: translate(-50%, -50%);
+        }
+
+        #announce {
+            top: 40%;
             transform: translateX(-50%);
         }
 
@@ -1192,7 +1202,7 @@
             position: absolute;
             font-family: serif;
             font-size: 200%;
-            top: 400px;
+            top: 460px;
             background-image: url(pictures/button.png);
             background-size: 100%;
             height: 300px;
@@ -1214,6 +1224,7 @@
 <body>
     <div class="video-wrap">
         <p id="question"></p>
+        <p id="announce"></p>
         <button id="choice1" onclick='next("1")'>start</button>
         <button id="choice2" onclick='next("2")'></button>
         <video id="background-video" autoplay loop muted></video>
