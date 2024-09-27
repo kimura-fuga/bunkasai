@@ -1115,17 +1115,13 @@
                 }
                 await sleep(3800)
             } else {
-                document.getElementById("bgm").play()
+                const bgm = document.getElementById("bgm")
+                bgm.volume = 0.15
+                bgm.play()
             }
 
             let question, choice1, choice2, background;
-            if (cnt >= numOfQuestions && answer === ans) {
-                document.getElementById("announce").textContent = "クリアー!!!!!"
-
-                // document.getElementById("bgm").remove()
-
-                next = function (_) { }
-            } else if (answer === ans) {
+            if (answer === ans) {
                 if (cnt !== 0) {
                     document.getElementById("background-video").setAttribute("src", "")
                     document.getElementById("announce").textContent = "正解！"
@@ -1143,38 +1139,68 @@
 
                     document.getElementById("background-video").setAttribute("src", "")
 
-                    document.getElementById("announce").textContent = "真ん中に戻って下さい"
-
                     document.getElementById("background-video").setAttribute("autoplay", "")
                     document.getElementById("background-video").setAttribute("hidden", "")
                     document.getElementById("background-video").setAttribute("muted", "")
                     document.getElementById("background-video").setAttribute("loop", "")
+
+                    document.getElementById("announce").textContent = "真ん中に戻って下さい"
 
                     await sleep(10000)
 
                     document.getElementById("announce").textContent = ""
                 }
 
-                let q = questions[cnt]
+                if (cnt >= numOfQuestions) {
+                    document.getElementById("announce").textContent = "クリアー!!!!!"
 
-                background = "pictures/Background.mov" // q.picture
+                    document.getElementById("bgm").remove()
 
-                question = q.question
-                choice1 = q.first
-                choice2 = q.second
+                    let video = document.getElementById("background-video")
+                    video.muted = false
+                    video.setAttribute("src", "pictures/clear.mov")
+                    video.removeAttribute("autoplay")
+                    video.removeAttribute("muted")
+                    video.removeAttribute("loop")
 
-                ans = q.ans
+                    video.play()
 
-                cnt++
+                    const bgm = document.getElementById("clear")
+                    bgm.volume = 0.15
+                    bgm.play()
 
-                document.getElementById("choice1").removeAttribute("hidden")
-                document.getElementById("choice2").removeAttribute("hidden")
-                document.getElementById("question").removeAttribute("hidden")
+                    await sleep(3000)
+
+                    document.getElementById("background-video").setAttribute("src", "")
+
+                    document.getElementById("background-video").setAttribute("autoplay", "")
+                    document.getElementById("background-video").setAttribute("hidden", "")
+                    document.getElementById("background-video").setAttribute("muted", "")
+                    document.getElementById("background-video").setAttribute("loop", "")
+
+                    next = function (_) { }
+                } else {
+                    let q = questions[cnt]
+
+                    background = "pictures/Background.mov" // q.picture
+
+                    question = q.question
+                    choice1 = q.first
+                    choice2 = q.second
+
+                    ans = q.ans
+
+                    cnt++
+
+                    document.getElementById("choice1").removeAttribute("hidden")
+                    document.getElementById("choice2").removeAttribute("hidden")
+                    document.getElementById("question").removeAttribute("hidden")
+                }
             } else {
                 document.getElementById("announce").textContent = "不正解"
                 background = ""
 
-                // document.getElementById("bgm").remove()
+                document.getElementById("bgm").remove()
 
                 let video = document.getElementById("background-video")
                 video.muted = false
@@ -1216,7 +1242,6 @@
             font-family: serif;
             color: #fff;
             background-color: #000;
-            font-size: 300%;
             position: absolute;
             left: 50%;
             z-index: 1;
@@ -1224,11 +1249,13 @@
         }
 
         #question {
+            font-size: 300%;
             top: 230px;
             transform: translate(-50%, -50%);
         }
 
         #announce {
+            font-size: 400%;
             top: 350px;
             transform: translateX(-50%);
         }
@@ -1267,6 +1294,7 @@
         <video id="background-video" autoplay loop muted></video>
     </div>
     <audio id="bgm" src="pictures/bgm.mp3" loop></audio>
+    <audio id="clear" src="pictures/clear.mp3"></audio>
 </body>
 
 </html>
