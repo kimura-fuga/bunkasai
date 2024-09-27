@@ -1114,11 +1114,15 @@
                     document.getElementById("background-video").setAttribute("src", "pictures/Right.mov")
                 }
                 await sleep(3800)
+            } else {
+                document.getElementById("bgm").play()
             }
 
             let question, choice1, choice2, background;
             if (cnt >= numOfQuestions && answer === ans) {
                 document.getElementById("announce").textContent = "クリアー!!!!!"
+
+                // document.getElementById("bgm").remove()
 
                 next = function (_) { }
             } else if (answer === ans) {
@@ -1169,6 +1173,8 @@
             } else {
                 document.getElementById("announce").textContent = "不正解"
                 background = ""
+
+                // document.getElementById("bgm").remove()
 
                 let video = document.getElementById("background-video")
                 video.muted = false
@@ -1260,6 +1266,7 @@
         <button id="choice2" onclick='next("2")'></button>
         <video id="background-video" autoplay loop muted></video>
     </div>
+    <audio id="bgm" src="pictures/bgm.mp3" loop></audio>
 </body>
 
 </html>
