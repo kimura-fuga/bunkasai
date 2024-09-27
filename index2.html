@@ -1116,17 +1116,38 @@
                 await sleep(3800)
             }
 
-            let question, announce, choice1, choice2, background;
+            let question, choice1, choice2, background;
             if (cnt >= numOfQuestions && answer === ans) {
-                announce = "クリアー!!!!!"
+                document.getElementById("announce").textContent = "クリアー!!!!!"
+
                 next = function (_) { }
             } else if (answer === ans) {
                 if (cnt !== 0) {
                     document.getElementById("background-video").setAttribute("src", "")
                     document.getElementById("announce").textContent = "正解！"
+
+                    let video = document.getElementById("background-video")
+                    video.muted = false
+                    video.setAttribute("src", "pictures/correct.MOV")
+                    video.removeAttribute("autoplay")
+                    video.removeAttribute("muted")
+                    video.removeAttribute("loop")
+
+                    video.play()
+
                     await sleep(2000)
+
+                    document.getElementById("background-video").setAttribute("src", "")
+
                     document.getElementById("announce").textContent = "真ん中に戻って下さい"
+
+                    document.getElementById("background-video").setAttribute("autoplay", "")
+                    document.getElementById("background-video").setAttribute("hidden", "")
+                    document.getElementById("background-video").setAttribute("muted", "")
+                    document.getElementById("background-video").setAttribute("loop", "")
+
                     await sleep(10000)
+
                     document.getElementById("announce").textContent = ""
                 }
 
@@ -1146,18 +1167,27 @@
                 document.getElementById("choice2").removeAttribute("hidden")
                 document.getElementById("question").removeAttribute("hidden")
             } else {
-                announce = "不正解"
+                document.getElementById("announce").textContent = "不正解"
+                background = ""
+
+                let video = document.getElementById("background-video")
+                video.muted = false
+                video.setAttribute("src", "pictures/incorrect.MOV")
+                video.removeAttribute("autoplay")
+                video.removeAttribute("muted")
+                video.removeAttribute("loop")
+
+                video.play()
+
+                await sleep(2000)
 
                 next = function (_) { }
-
-                document.getElementById("failed-audio").play()
             }
 
             document.getElementById("background-video").setAttribute("src", background ?? "")
             document.getElementById("question").textContent = question
             document.getElementById("choice1").textContent = choice1 ?? ""
             document.getElementById("choice2").textContent = choice2 ?? ""
-            document.getElementById("announce").textContent = announce ?? ""
         }
     </script>
 
@@ -1193,7 +1223,7 @@
         }
 
         #announce {
-            top: 40%;
+            top: 350px;
             transform: translateX(-50%);
         }
 
@@ -1229,8 +1259,6 @@
         <button id="choice2" onclick='next("2")'></button>
         <video id="background-video" autoplay loop muted></video>
     </div>
-
-    <audio id="failed-audio" src="pictures/audio1.mp3"></audio>
 </body>
 
 </html>
