@@ -1115,6 +1115,29 @@
                 }
                 await sleep(3800)
             } else {
+                document.getElementById("question").setAttribute("hidden", "")
+                document.getElementById("choice1").setAttribute("hidden", "")
+                document.getElementById("choice2").setAttribute("hidden", "")
+
+                const text = document.getElementById("announce")
+                text.textContent = "トロッコを傾けて二択のクイズに答えて下さい"
+                await sleep(4000)
+                text.textContent = "全部で5問ありますが"
+                await sleep(3000)
+                text.textContent = "間違えたらそこで終了です"
+                await sleep(3500)
+                text.textContent = "全問正解を目指して"
+                await sleep(3000)
+                text.textContent = "頑張って下さい！"
+                await sleep(3000)
+                text.textContent = "Start!"
+                await sleep(3000)
+                text.textContent = ""
+
+                document.getElementById("question").removeAttribute("hidden")
+                document.getElementById("choice1").removeAttribute("hidden")
+                document.getElementById("choice2").removeAttribute("hidden")
+
                 const bgm = document.getElementById("bgm")
                 bgm.volume = 0.15
                 bgm.play()
@@ -1248,18 +1271,17 @@
             left: 50%;
             z-index: 1;
             margin: 0 0 0;
+            transform: translate(-50%, -50%);
         }
 
         #question {
             font-size: 300%;
             top: 230px;
-            transform: translate(-50%, -50%);
         }
 
         #announce {
             font-size: 400%;
-            top: 350px;
-            transform: translateX(-50%);
+            top: 375px;
         }
 
         button {
